@@ -1,0 +1,5 @@
+- name: Deploy honeyagent
+  hosts: honeypots
+  become: yes
+  roles:
+    - honeyagent
