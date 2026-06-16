@@ -1,0 +1,50 @@
+- name: Create honeyagent user
+  ansible.builtin.user:
+    name: honeyagent
+    system: yes
+    shell: /usr/sbin/nologin
+    home: /var/lib/honeyagent
+
+- name: Create honeyagent directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: honeyagent
+    group: honeyagent
+    mode: '0755'
+  loop:
+    - /etc/honeyagent
+    - /var/log/honeyagent
+
+- name: Deploy honeyagent binary
+  ansible.builtin.copy:
+    src: honeyagent
+    dest: /usr/local/bin/honeyagent
+    owner: root
+    group: root
+    mode: '0755'
+  notify: restart honeyagent
+
+- name: Render config from template
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: /etc/honeyagent/config.json
+    owner: honeyagent
+    group: honeyagent
+    mode: '0640'
+  notify: restart honeyagent
+
+- name: Install systemd unit
+  ansible.builtin.template:
+    src: honeyagent.service.j2
+    dest: /etc/systemd/system/honeyagent.service
+    mode: '0644'
+  notify:
+    - reload systemd
+    - restart honeyagent
+
+- name: Enable and start service
+  ansible.builtin.systemd:
+    name: honeyagent
+    enabled: yes
+    state: started
