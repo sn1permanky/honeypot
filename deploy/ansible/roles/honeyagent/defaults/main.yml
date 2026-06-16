@@ -1,0 +1,17 @@
+honeyagent_id: "{{ inventory_hostname }}"
+honeyagent_log_dir: /var/log/honeyagent
+honeyagent_collector_url: ""
+
+honeyagent_fake_dirs:
+  - /var/log/kaspersky
+  - /var/opt/kaspersky/state
+  - /var/opt/kaspersky/conf
+
+honeyagent_fake_procs:
+  - { name: klnagent, argv0: /opt/kaspersky/klnagent/sbin/klnagent, sleep_every_sec: 30 }
+
+honeyagent_decoys:
+  - { port: 2323, proto: tcp, behavior: telnet_banner }
+  - { port: 8080, proto: tcp, behavior: http_admin }
+
+honeyagent_heartbeat_interval: 60
