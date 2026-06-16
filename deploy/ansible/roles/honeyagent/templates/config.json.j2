@@ -1,0 +1,9 @@
+{
+  "agent_id": "{{ honeyagent_id }}",
+  "log_dir": "{{ honeyagent_log_dir }}",
+  "collector_url": "{{ honeyagent_collector_url }}",
+  "fake_dirs": {{ honeyagent_fake_dirs | to_json }},
+  "fake_procs": {{ honeyagent_fake_procs | to_json }},
+  "decoys": {{ honeyagent_decoys | to_json }},
+  "heartbeat": { "interval_sec": {{ honeyagent_heartbeat_interval }} }
+}
